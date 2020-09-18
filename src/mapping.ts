@@ -16,7 +16,7 @@ export function handleMint(event: LOG_JOIN): void {
   }
 
   lp.user = user.id
-  lp.balance += event.params.tokenAmountOut
+  lp.balance += event.params.tokenAmountIn
   lp.poolProviderName = "Balancer"
   lp.save()
 }

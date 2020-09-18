@@ -1,0 +1,17 @@
+type User @entity {
+  id: ID!
+  liquidityPositions: [LiquidityPosition!]! @derivedFrom(field: "user")
+}
+
+type LiquidityPosition @entity {
+  id: ID!
+  user: User!
+  balance: BigInt!
+  poolAddress: Bytes!
+  poolProviderName: PoolProvider!
+}
+
+enum PoolProvider {
+  Balancer
+  Uniswap
+}

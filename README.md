@@ -1,3 +1,14 @@
-# Example Subgraph
+# Lquidity Vision Subgraph
 
-An example to help you get started with The Graph. For more information see the docs on https://thegraph.com/docs/.
+This subgraph will index all the lp balances of a user whether they are still in the pool or not. This is useful information as we want to build a history of P+L for their liquidity pool holdings. 
+
+This is the subgraph for Liquidity.Vision
+
+To deploy, please use:
+```
+ graph deploy \
+    --debug \
+    --node https://api.thegraph.com/deploy/ \
+    --ipfs https://api.thegraph.com/ipfs/ \
+    tommytchan/liquidity-vision
+```

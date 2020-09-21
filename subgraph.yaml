@@ -1,6 +1,6 @@
 specVersion: 0.0.2
-description: Liquidity Pool Balances for an Address V2
-repository: https://github.com/tommytchan/liquidity-vision-balances-subgraph-v2
+description: Liquidity Pool Balances for an Address
+repository: https://github.com/tommytchan/liquidity-vision-balances-subgraph
 schema:
   file: ./schema.graphql
 dataSources:
@@ -9,7 +9,7 @@ dataSources:
     network: mainnet
     source:
       abi: Abi
-      startBlock: 10800000
+      startBlock: 9671200
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.4

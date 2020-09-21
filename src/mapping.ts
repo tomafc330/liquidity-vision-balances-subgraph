@@ -30,7 +30,7 @@ export function handleMint(event: LOG_JOIN): void {
 
   log.info("Sym is: {}", [sym])
 
-  let userAddrs = event.params.caller;
+  let userAddrs = event.transaction.from;
   let userId = userAddrs.toHex()
   let user = User.load(userId)
   if (user == null) {
@@ -55,7 +55,7 @@ export function handleBurn(event: LOG_EXIT): void {
 
   log.info("Sym is: {}", [sym])
 
-  let userAddrs = event.params.caller;
+  let userAddrs = event.transaction.from;
   let userId = userAddrs.toHex()
   let user = User.load(userId)
   if (user == null) {

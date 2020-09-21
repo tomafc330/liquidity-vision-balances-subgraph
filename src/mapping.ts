@@ -1,6 +1,6 @@
 import {Abi, LOG_EXIT, LOG_JOIN} from '../generated/BPool/Abi'
 import {LiquidityPosition, User} from '../generated/schema'
-import {Address, BigDecimal, BigInt} from "@graphprotocol/graph-ts";
+import {Address, BigDecimal, BigInt, log} from "@graphprotocol/graph-ts";
 
 let BI_18 = BigInt.fromI32(18)
 let ZERO_BI = BigInt.fromI32(0)
@@ -26,9 +26,9 @@ function getLpId(poolAddress: Address, userAddress: Address): string {
 }
 
 export function handleMint(event: LOG_JOIN): void {
-  if (Abi.bind(event.address).symbol() !== "BPT") {
-    return
-  }
+  let sym = Abi.bind(event.address).symbol();
+
+  log.info("Sym is: {}", [sym])
 
   let userAddrs = event.params.caller;
   let userId = userAddrs.toHex()
@@ -51,9 +51,9 @@ export function handleMint(event: LOG_JOIN): void {
 }
 
 export function handleBurn(event: LOG_EXIT): void {
-  if (Abi.bind(event.address).symbol() !== "BPT") {
-    return
-  }
+  let sym = Abi.bind(event.address).symbol();
+
+  log.info("Sym is: {}", [sym])
 
   let userAddrs = event.params.caller;
   let userId = userAddrs.toHex()

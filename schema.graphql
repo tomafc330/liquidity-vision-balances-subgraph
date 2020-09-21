@@ -9,7 +9,6 @@ type LiquidityPosition @entity {
   poolAddress: Bytes!
   balance: BigDecimal!
   poolProviderName: PoolProvider!
-  totalSupply: BigDecimal!
 }
 
 enum PoolProvider {

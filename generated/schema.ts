@@ -42,13 +42,24 @@ export class User extends Entity {
     this.set("id", Value.fromString(value));
   }
 
-  get liquidityPositions(): Array<string> {
+  get liquidityPositions(): Array<string> | null {
     let value = this.get("liquidityPositions");
-    return value.toStringArray();
+    if (value === null) {
+      return null;
+    } else {
+      return value.toStringArray();
+    }
   }
 
-  set liquidityPositions(value: Array<string>) {
-    this.set("liquidityPositions", Value.fromStringArray(value));
+  set liquidityPositions(value: Array<string> | null) {
+    if (value === null) {
+      this.unset("liquidityPositions");
+    } else {
+      this.set(
+        "liquidityPositions",
+        Value.fromStringArray(value as Array<string>)
+      );
+    }
   }
 }
 
@@ -91,15 +102,6 @@ export class LiquidityPosition extends Entity {
     this.set("user", Value.fromString(value));
   }
 
-  get balance(): BigInt {
-    let value = this.get("balance");
-    return value.toBigInt();
-  }
-
-  set balance(value: BigInt) {
-    this.set("balance", Value.fromBigInt(value));
-  }
-
   get poolAddress(): Bytes {
     let value = this.get("poolAddress");
     return value.toBytes();
@@ -109,6 +111,15 @@ export class LiquidityPosition extends Entity {
     this.set("poolAddress", Value.fromBytes(value));
   }
 
+  get balance(): BigDecimal {
+    let value = this.get("balance");
+    return value.toBigDecimal();
+  }
+
+  set balance(value: BigDecimal) {
+    this.set("balance", Value.fromBigDecimal(value));
+  }
+
   get poolProviderName(): string {
     let value = this.get("poolProviderName");
     return value.toString();
@@ -116,5 +127,14 @@ export class LiquidityPosition extends Entity {
 
   set poolProviderName(value: string) {
     this.set("poolProviderName", Value.fromString(value));
+  }
+
+  get totalSupply(): BigDecimal {
+    let value = this.get("totalSupply");
+    return value.toBigDecimal();
+  }
+
+  set totalSupply(value: BigDecimal) {
+    this.set("totalSupply", Value.fromBigDecimal(value));
   }
 }

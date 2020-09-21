@@ -1,44 +1,78 @@
-import { LOG_JOIN, LOG_EXIT } from '../generated/BPool/Abi'
-import { LiquidityPosition, User } from '../generated/schema'
+import {Abi, LOG_EXIT, LOG_JOIN} from '../generated/BPool/Abi'
+import {LiquidityPosition, User} from '../generated/schema'
+import {Address, BigDecimal, BigInt} from "@graphprotocol/graph-ts";
+
+let BI_18 = BigInt.fromI32(18)
+let ZERO_BI = BigInt.fromI32(0)
+let ONE_BI = BigInt.fromI32(1)
+
+function exponentToBigDecimal(decimals: BigInt): BigDecimal {
+  let bd = BigDecimal.fromString('1')
+  for (let i = ZERO_BI; i.lt(decimals as BigInt); i = i.plus(ONE_BI)) {
+    bd = bd.times(BigDecimal.fromString('10'))
+  }
+  return bd
+}
+
+function convertTokenToDecimal(tokenAmount: BigInt, exchangeDecimals: BigInt): BigDecimal {
+  if (exchangeDecimals == ZERO_BI) {
+    return tokenAmount.toBigDecimal()
+  }
+  return tokenAmount.toBigDecimal().div(exponentToBigDecimal(exchangeDecimals))
+}
+
+function getLpId(poolAddress: Address, userAddress: Address): string {
+  return poolAddress.toHexString().concat('-').concat(userAddress.toHexString());
+}
 
 export function handleMint(event: LOG_JOIN): void {
-  let id = event.params.caller.toHex()
-  let user = User.load(id)
+  if (Abi.bind(event.address).symbol() !== "BPT") {
+    return
+  }
+
+  let userAddrs = event.params.caller;
+  let userId = userAddrs.toHex()
+  let user = User.load(userId)
   if (user == null) {
-    user = new User(id)
+    user = new User(userId)
+    user.save()
   }
-  user.save()
 
-  let poolAddrs = event.params.tokenIn.toHex()
-  let lp = LiquidityPosition.load(poolAddrs)
+  let lpId = getLpId(event.address, userAddrs)
+  let lp = LiquidityPosition.load(lpId)
   if (lp == null) {
-    lp = new LiquidityPosition(poolAddrs)
+    lp = new LiquidityPosition(lpId)
+    lp.user = user.id
+    lp.poolProviderName = "Balancer"
   }
-
-  lp.user = user.id
-
-  // have to look up the tx
-  // lp.balance += event.params.tokenAmountIn
-  lp.poolProviderName = "Balancer"
+  lp.poolAddress = event.address
+  lp.balance = convertTokenToDecimal(Abi.bind(event.address).balanceOf(userAddrs), BI_18)
   lp.save()
 }
 
 export function handleBurn(event: LOG_EXIT): void {
-  let id = event.params.caller.toHex()
-  let user = User.load(id)
+  if (Abi.bind(event.address).symbol() !== "BPT") {
+    return
+  }
+
+  let userAddrs = event.params.caller;
+  let userId = userAddrs.toHex()
+  let user = User.load(userId)
   if (user == null) {
-    user = new User(id)
+    user = new User(userId)
+    user.save()
   }
-  user.save()
 
-  let poolAddrs = event.params.tokenOut.toHex()
-  let lp = LiquidityPosition.load(poolAddrs)
+  let lpId = getLpId(event.address, userAddrs)
+  let lp = LiquidityPosition.load(lpId)
   if (lp == null) {
-    lp = new LiquidityPosition(poolAddrs)
+    lp = new LiquidityPosition(lpId)
+    lp.user = user.id
+    lp.poolProviderName = "Balancer"
   }
-
-  lp.user = user.id
-  // lp.balance -= event.params.tokenAmountOut
-  lp.poolProviderName = "Balancer"
+  lp.poolAddress = event.address
+  lp.balance = convertTokenToDecimal(Abi.bind(event.address).balanceOf(userAddrs), BI_18)
+  lp.totalSupply = convertTokenToDecimal(Abi.bind(event.address).totalSupply(), BI_18)
   lp.save()
 }
+

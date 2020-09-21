@@ -1,6 +1,6 @@
 specVersion: 0.0.2
-description: Liquidity Pool Balances for an Address
-repository: https://github.com/tommytchan/liquidity-vision-balances-subgraph
+description: Liquidity Pool Balances for an Address V2
+repository: https://github.com/tommytchan/liquidity-vision-balances-subgraph-v2
 schema:
   file: ./schema.graphql
 dataSources:

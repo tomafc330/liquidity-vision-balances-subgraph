@@ -26,53 +26,68 @@ function getLpId(poolAddress: Address, userAddress: Address): string {
 }
 
 export function handleMint(event: LOG_JOIN): void {
-  let sym = Abi.bind(event.address).symbol();
-
-  log.info("Sym is: {}", [sym])
+  let poolAddress = event.address;
+  let sym = Abi.bind(poolAddress).symbol();
+  let tx = event.transaction.hash.toHexString();
+  log.info("Sym is: {} and tx is: {}", [sym, tx])
+  if (sym != "BPT") {
+    return
+  }
 
   let userAddrs = event.transaction.from;
   let userId = userAddrs.toHex()
+
+  log.info("event caller is: {}, tx is: {}", [userId, tx])
+
   let user = User.load(userId)
   if (user == null) {
     user = new User(userId)
     user.save()
   }
 
-  let lpId = getLpId(event.address, userAddrs)
+  let lpId = getLpId(poolAddress, userAddrs)
   let lp = LiquidityPosition.load(lpId)
   if (lp == null) {
     lp = new LiquidityPosition(lpId)
     lp.user = user.id
     lp.poolProviderName = "Balancer"
   }
-  lp.poolAddress = event.address
-  lp.balance = convertTokenToDecimal(Abi.bind(event.address).balanceOf(userAddrs), BI_18)
+  lp.poolAddress = poolAddress
+  lp.balance = convertTokenToDecimal(Abi.bind(poolAddress).balanceOf(userAddrs), BI_18)
   lp.save()
 }
 
 export function handleBurn(event: LOG_EXIT): void {
-  let sym = Abi.bind(event.address).symbol();
+  let poolAddress = event.address;
+  let sym = Abi.bind(poolAddress).symbol();
+  let tx = event.transaction.hash.toHexString();
 
-  log.info("Sym is: {}", [sym])
+  log.info("Sym is: {} and tx is: {}", [sym, tx])
+
+  if (sym != "BPT") {
+    return
+  }
 
   let userAddrs = event.transaction.from;
   let userId = userAddrs.toHex()
+
+  log.info("event caller is: {}, tx is: {}", [userId, tx])
+
   let user = User.load(userId)
   if (user == null) {
     user = new User(userId)
     user.save()
   }
 
-  let lpId = getLpId(event.address, userAddrs)
+  let lpId = getLpId(poolAddress, userAddrs)
   let lp = LiquidityPosition.load(lpId)
   if (lp == null) {
     lp = new LiquidityPosition(lpId)
     lp.user = user.id
     lp.poolProviderName = "Balancer"
   }
-  lp.poolAddress = event.address
-  lp.balance = convertTokenToDecimal(Abi.bind(event.address).balanceOf(userAddrs), BI_18)
-  lp.totalSupply = convertTokenToDecimal(Abi.bind(event.address).totalSupply(), BI_18)
+  lp.poolAddress = poolAddress
+  lp.balance = convertTokenToDecimal(Abi.bind(poolAddress).balanceOf(userAddrs), BI_18)
   lp.save()
 }
 

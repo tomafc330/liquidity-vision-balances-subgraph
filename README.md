@@ -4,6 +4,10 @@ This subgraph will index all the lp balances of a user whether they are still in
 
 This is the subgraph for Liquidity.Vision
 
+To generate the mapping ts files, please do:
+```
+yarn codegen
+```
 To deploy, please use:
 ```
  graph deploy \

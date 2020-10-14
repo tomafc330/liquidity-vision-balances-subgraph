@@ -1,15 +1,16 @@
-specVersion: 0.0.2
+specVersion: 0.0.3
 description: Liquidity Pool Balances for an Address
 repository: https://github.com/tommytchan/liquidity-vision-balances-subgraph
 schema:
   file: ./schema.graphql
 dataSources:
   - kind: ethereum/contract
-    name: BPool
+    name: BFactory
     network: mainnet
     source:
-      abi: Abi
-      startBlock: 9671200
+      address: "0x9424B1412450D0f8Fc2255FAf6046b98213B76Bd"
+      abi: BFactory
+      startBlock: 9562480
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.4
@@ -18,11 +19,33 @@ dataSources:
         - User
         - LiquidityPosition
       abis:
-        - name: Abi
-          file: ./abis/Abi.json
+        - name: BFactory
+          file: ./abis/BFactory.json
+        - name: BPool
+          file: ./abis/BPool.json
+      eventHandlers:
+        - event: LOG_NEW_POOL(indexed address,indexed address)
+          handler: handleNewPool
+      file: ./src/mapping.ts
+  - kind: ethereum/contract
+    name: BPool
+    network: mainnet
+    source:
+      abi: BPool
+      startBlock: 9562480
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      entities:
+        - User
+        - LiquidityPosition
+      abis:
+        - name: BPool
+          file: ./abis/BPool.json
       eventHandlers:
         - event: LOG_JOIN(indexed address,indexed address,uint256)
-          handler: handleMint
+          handler: handleJoin
         - event: LOG_EXIT(indexed address,indexed address,uint256)
           handler: handleBurn
       file: ./src/mapping.ts

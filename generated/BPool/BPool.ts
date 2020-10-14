@@ -174,7 +174,7 @@ export class Transfer__Params {
   }
 }
 
-export class Abi__swapExactAmountInResult {
+export class BPool__swapExactAmountInResult {
   value0: BigInt;
   value1: BigInt;
 
@@ -191,7 +191,7 @@ export class Abi__swapExactAmountInResult {
   }
 }
 
-export class Abi__swapExactAmountOutResult {
+export class BPool__swapExactAmountOutResult {
   value0: BigInt;
   value1: BigInt;
 
@@ -208,9 +208,9 @@ export class Abi__swapExactAmountOutResult {
   }
 }
 
-export class Abi extends ethereum.SmartContract {
-  static bind(address: Address): Abi {
-    return new Abi("Abi", address);
+export class BPool extends ethereum.SmartContract {
+  static bind(address: Address): BPool {
+    return new BPool("BPool", address);
   }
 
   BONE(): BigInt {
@@ -1472,7 +1472,7 @@ export class Abi extends ethereum.SmartContract {
     tokenOut: Address,
     minAmountOut: BigInt,
     maxPrice: BigInt
-  ): Abi__swapExactAmountInResult {
+  ): BPool__swapExactAmountInResult {
     let result = super.call(
       "swapExactAmountIn",
       "swapExactAmountIn(address,uint256,address,uint256,uint256):(uint256,uint256)",
@@ -1485,7 +1485,7 @@ export class Abi extends ethereum.SmartContract {
       ]
     );
 
-    return new Abi__swapExactAmountInResult(
+    return new BPool__swapExactAmountInResult(
       result[0].toBigInt(),
       result[1].toBigInt()
     );
@@ -1497,7 +1497,7 @@ export class Abi extends ethereum.SmartContract {
     tokenOut: Address,
     minAmountOut: BigInt,
     maxPrice: BigInt
-  ): ethereum.CallResult<Abi__swapExactAmountInResult> {
+  ): ethereum.CallResult<BPool__swapExactAmountInResult> {
     let result = super.tryCall(
       "swapExactAmountIn",
       "swapExactAmountIn(address,uint256,address,uint256,uint256):(uint256,uint256)",
@@ -1514,7 +1514,10 @@ export class Abi extends ethereum.SmartContract {
     }
     let value = result.value;
     return ethereum.CallResult.fromValue(
-      new Abi__swapExactAmountInResult(value[0].toBigInt(), value[1].toBigInt())
+      new BPool__swapExactAmountInResult(
+        value[0].toBigInt(),
+        value[1].toBigInt()
+      )
     );
   }
 
@@ -1524,7 +1527,7 @@ export class Abi extends ethereum.SmartContract {
     tokenOut: Address,
     tokenAmountOut: BigInt,
     maxPrice: BigInt
-  ): Abi__swapExactAmountOutResult {
+  ): BPool__swapExactAmountOutResult {
     let result = super.call(
       "swapExactAmountOut",
       "swapExactAmountOut(address,uint256,address,uint256,uint256):(uint256,uint256)",
@@ -1537,7 +1540,7 @@ export class Abi extends ethereum.SmartContract {
       ]
     );
 
-    return new Abi__swapExactAmountOutResult(
+    return new BPool__swapExactAmountOutResult(
       result[0].toBigInt(),
       result[1].toBigInt()
     );
@@ -1549,7 +1552,7 @@ export class Abi extends ethereum.SmartContract {
     tokenOut: Address,
     tokenAmountOut: BigInt,
     maxPrice: BigInt
-  ): ethereum.CallResult<Abi__swapExactAmountOutResult> {
+  ): ethereum.CallResult<BPool__swapExactAmountOutResult> {
     let result = super.tryCall(
       "swapExactAmountOut",
       "swapExactAmountOut(address,uint256,address,uint256,uint256):(uint256,uint256)",
@@ -1566,7 +1569,7 @@ export class Abi extends ethereum.SmartContract {
     }
     let value = result.value;
     return ethereum.CallResult.fromValue(
-      new Abi__swapExactAmountOutResult(
+      new BPool__swapExactAmountOutResult(
         value[0].toBigInt(),
         value[1].toBigInt()
       )

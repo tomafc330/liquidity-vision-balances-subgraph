@@ -14,4 +14,5 @@ type LiquidityPosition @entity {
 enum PoolProvider {
   Balancer
   Uniswap
+  YFV
 }

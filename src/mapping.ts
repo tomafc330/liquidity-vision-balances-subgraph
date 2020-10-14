@@ -43,7 +43,7 @@ export function handleJoin(event: LOG_JOIN): void {
 function logMintEvent(poolAddress: Address, tx: string, userAddrs: Address): void {
   let sym = BPool.bind(poolAddress).symbol();
   log.info("Sym is: {} and tx is: {}", [sym, tx])
-  if (sym == "BPT" || sym != "VLP") {
+  if (sym == "BPT" || sym == "VLP") {
     let userId = userAddrs.toHex()
 
     log.info("event caller is: {}, tx is: {}", [userId, tx])
